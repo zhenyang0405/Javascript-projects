@@ -10,74 +10,40 @@ let image = img1;
 let rolling;
 let luckyDrawResult;
 let counter = 0;
+let select;
 
-
-function changeImage() {
-    if (image == img1) {
-        document.getElementById('pic').src = img2;
-        image = img2;
-    } else if (image == img2){
-        document.getElementById('pic').src = img3;
-        image = img3;
-    } else if (image == img3) {
-        document.getElementById('pic').src = img4;
-        image = img4;
-    } else if (image == img4) {
-        document.getElementById('pic').src = img5;
-        image = img5;
-    } else if (image == img5) {
-        document.getElementById('pic').src = img6;
-        image = img6;
-    } else if (image == img6) {
-        document.getElementById('pic').src = img7;
-        image = img7;
-    } else if (image == img7) {
-        document.getElementById('pic').src = img8;
-        image = img8;
-    } else {
-        document.getElementById('pic').src = img1;
-        image = img1;
-    }
-}
-
+// Algorithm to weight the prizes differently, to increase the difficulty to get 1st prize
 function changeImageMulti() {
     document.getElementById('start-button').disabled = true;
-    const prime = [7, 11, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 97];
-    const fibonacci = [1, 2, 5, 8, 13, 21, 34, 55, 89];
 
-    let goldSilverSet = new Set();
-    let greenRedPinkSet = new Set();
+    let generalSet = new Set();
 
-    while (goldSilverSet.size != 2) {
-        let rand = fibonacci[Math.floor(Math.random() * fibonacci.length)];
-        goldSilverSet.add(rand);
+    while (generalSet.size != 17) {
+        let rand = Math.floor(Math.random() * 101);
+        generalSet.add(rand);
     }
 
-    while (greenRedPinkSet.size != 15) {
-        let rand = prime[Math.floor(Math.random() * prime.length)];
-        greenRedPinkSet.add(rand)
-    }
-
-    let goldSilverArr = Array.from(goldSilverSet);
-    let greenRedPinkArr = Array.from(greenRedPinkSet);
+    let generalArr = Array.from(generalSet);
+    let goldSilverArr = [generalArr.pop(), generalArr.pop()];
+    let greenRedPinkArr = generalArr;
     let allArr = goldSilverArr.concat(greenRedPinkArr);
 
     if (allArr.includes(counter)) {
         if (goldSilverArr.includes(counter)) {
-            let num = Math.floor(Math.random() * 1) + 1;
+            let num = Math.floor(Math.random() * 2) + 1;
             document.getElementById('pic').src = eval(`img${num}`);
             image = eval(`img${num}`);            
             console.log(counter);
             counter++;
         } else {
-            let num = Math.floor(Math.random() * 2) + 3;
+            let num = Math.floor(Math.random() * 3) + 3;
             document.getElementById('pic').src = eval(`img${num}`);
             image = eval(`img${num}`);            
             console.log(counter);
             counter++;
         }
     } else {
-        let num = Math.floor(Math.random() * 2) + 6;
+        let num = Math.floor(Math.random() * 3) + 6;
         document.getElementById('pic').src = eval(`img${num}`);
         image = eval(`img${num}`);            
         console.log(counter);
@@ -89,53 +55,115 @@ function changeImageMulti() {
     }    
 }
 
+
+// lucky draw is rolling
 function luckyDraw() {
     rolling = setInterval(changeImageMulti, 10);
 }
 
+
+// Stop the lucky draw rolling.
 function stopLuckyDraw() {
     clearInterval(rolling);
-    document.getElementById('start-button').disabled = true;
 
     if (image == img1) {
         document.getElementById('draw-result').innerHTML = '4 Boxes of AND';
         luckyDrawResult = '4 Boxes of AND';
-        console.log(luckyDrawResult);
         return luckyDrawResult;
     } else if (image == img2) {
         document.getElementById('draw-result').innerHTML = '2 Boxes of AND';
         luckyDrawResult = '2 Boxes of AND';
-        console.log(luckyDrawResult);
         return luckyDrawResult;
     } else if (image == img3) {
         document.getElementById('draw-result').innerHTML = 'Any 1 Product (SLM/AND/IM48)';
+        select = selectedLucky();
         luckyDrawResult = 'Any 1 Product (SLM/AND/IM48)';
-        console.log(luckyDrawResult);
         return luckyDrawResult;
     } else if (image == img4) {
         document.getElementById('draw-result').innerHTML = 'Any 1 Product (SL/IM/PA/RF/GC)';
+        select = selectedLucky();
         luckyDrawResult = 'Any 1 Product (SL/IM/PA/RF/GC)';
-        console.log(luckyDrawResult);
         return luckyDrawResult;
     } else if (image == img5) {
         document.getElementById('draw-result').innerHTML = 'Any 1 Product (Aurage CP/Aurage UVMB)';
-        luckyDrawResult = 'Any 1 Product (Aurage CP/Aurage UVMB';
-        console.log(luckyDrawResult);
+        select = selectedLucky();
+        luckyDrawResult = 'Any 1 Product (Aurage CP/Aurage UVMB)';
         return luckyDrawResult;
     } else if (image == img6) {
         document.getElementById('draw-result').innerHTML = '5 Bottles of AND';
         luckyDrawResult = '5 Bottles of AND';
-        console.log(luckyDrawResult);
         return luckyDrawResult;
     } else if (image == img7) {
         document.getElementById('draw-result').innerHTML = '1 Bottle of AND';
         luckyDrawResult = '1 Bottle of AND';
-        console.log(luckyDrawResult);
         return luckyDrawResult;
-    }else if (image == img8) {
+    } else {
         document.getElementById('draw-result').innerHTML = '3 IZUMIO pouches';
         luckyDrawResult = '3 IZUMIO pouches';
-        console.log(luckyDrawResult);
         return luckyDrawResult;
     }
 }
+
+
+// Selected prizes that need option
+function selectedLucky() {
+    document.getElementById('luckyChoice').style.display = 'inline-block';
+    document.getElementById('luckySelect').style.display = 'inline-block';
+
+    let select = document.getElementById('luckySelect');
+    // let text = select.options[select.selectedIndex].text;
+
+    if (image == img3) {
+        let options = ['SLM', 'AND', 'IM48'];
+
+        options.forEach(function(element, key) {
+            select[key] = new Option(element, key);
+        })
+    } else if (image == img4) {
+        let options = ['SL', 'IM', 'PA', 'RF', 'GC'];
+
+        options.forEach(function(element, key) {
+            select[key] = new Option(element, key);
+        })
+    } else if (image == img5) {
+        let options = ['Aurage CP', 'Aurage UVMB'];
+
+        options.forEach(function(element, key) {
+            select[key] = new Option(element, key);
+        })
+    }
+    
+    return select;
+}
+
+// Simple changing image one by one
+// function changeImage() {
+//     if (image == img1) {
+//         document.getElementById('pic').src = img2;
+//         image = img2;
+//     } else if (image == img2){
+//         document.getElementById('pic').src = img3;
+//         image = img3;
+//         select = selectedLucky();
+//     } else if (image == img3) {
+//         document.getElementById('pic').src = img4;
+//         image = img4;
+//         select = selectedLucky();
+//     } else if (image == img4) {
+//         document.getElementById('pic').src = img5;
+//         image = img5;
+//         select = selectedLucky();
+//     } else if (image == img5) {
+//         document.getElementById('pic').src = img6;
+//         image = img6;
+//     } else if (image == img6) {
+//         document.getElementById('pic').src = img7;
+//         image = img7;
+//     } else if (image == img7) {
+//         document.getElementById('pic').src = img8;
+//         image = img8;
+//     } else {
+//         document.getElementById('pic').src = img1;
+//         image = img1;
+//     }
+// }

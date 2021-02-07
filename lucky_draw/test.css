@@ -15,3 +15,17 @@ img {
 #draw-result {
     margin-left: 2.8%;
 }
+
+#luckyChoice {
+    display: none;
+    margin-left: 2.8%;
+}
+
+#luckySelect {
+    display: none;
+    margin-left: 2.8%;
+}
+
+#changeImage {
+    display: none;
+}
